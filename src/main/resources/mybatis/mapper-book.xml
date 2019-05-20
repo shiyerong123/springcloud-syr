@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.mapper.OrderMapper">
+  <select id="findOrderCount" resultType="int">
+      select count(*) from t_order o
+      left join t_status s
+      on o.statusId = s.id
+      left join t_wetherorder t
+      on o.wetherOrderId=t.id
+      left join t_deal d on o.id=d.orderId
+
+      <include refid="searchSql"></include>
+   </select>
+   <select id="findOrder" resultType="com.jk.model.Order">
+       select *,getpy(shipping),UPPER(to_pinyin(shipping)) from t_order o left JOIN t_goods g ON o.orderNo = g.orderNo
+       left join t_status s on o.statusId = s.id
+       left join t_wetherorder t on o.wetherOrderId=t.id
+       left join t_deal d on o.id=d.orderId
+       <include refid="searchSql"></include>
+       GROUP BY o.id
+       limit #{start},#{limit}
+   </select>
+    <sql id="searchSql">
+        where 1=1
+        <if test="order.statusId!=null and order.statusId!=''">
+            and (o.statusId=#{order.statusId})
+        </if>
+        <if test="order.wetherOrderId!=null and order.wetherOrderId!=''">
+            and (o.wetherOrderId=#{order.wetherOrderId})
+        </if>
+        <if test="order.draw==1 and order.fleid!=null and order.fleid!='' ">
+            and (o.orderNo=#{order.fleid})
+        </if>
+
+        <if test="order.draw==2 and order.fleid!=null and order.fleid!='' ">
+            and  o.shipping like '%${order.fleid}%' or getpy(shipping)  like '%${order.fleid}%' or UPPER(to_pinyin(shipping)) like '%${order.fleid}%'
+        </if>
+
+        <if test="order.draw==3 and order.fleid!=null and order.fleid!='' ">
+            and (o.sendPhone=#{order.fleid})
+        </if>
+
+        <if test="order.startPlaceDate!=null">
+            and (o.placeDate &gt;= #{order.startPlaceDate})
+        </if>
+
+        <if test="order.endPlaceDate!=null">
+            and (o.placeDate &lt;= #{order.endPlaceDate})
+        </if>
+       <if test="order.aaa==1 and order.slid!=null">
+            and (o.hairProvinces=#{order.slid})
+        </if>
+        <if test="order.aaa==1 and order.shiid!=null">
+            and (o.city=#{order.shiid})
+        </if>
+        <if test="order.aaa==2 and order.slid!=null">
+            and (o.closedProvinces=#{order.slid})
+        </if>
+        <if test="order.aaa==2 and order.shiid!=null">
+            and (o.city2=#{order.shiid})
+        </if>
+
+    </sql>
+
+    <select id="findById" resultType="com.jk.model.Particulars">
+       select * from t_order o left JOIN t_goods g ON o.orderNo = g.orderNo
+       left join t_status s on o.statusId = s.id
+       left join t_deal d on o.id=d.orderId
+       left join t_wetherorder t on o.wetherOrderId=t.id WHERE o.orderNo=#{orderNo}
+ GROUP BY o.id
+    </select>
+
+
+    <select id="findDealCount" resultType="int">
+      select count(1) from t_deal d inner join t_order o on d.orderId=o.id
+      <include refid="dealSql"></include>
+    </select>
+    <select id="findDeal" resultType="com.jk.model.Deal">
+        select * from t_deal d inner join t_order o on d.orderId=o.id
+        <include refid="dealSql"></include>
+        limit #{start},#{limit}
+    </select>
+    <sql id="dealSql">
+        where 1=1
+        <if test="deal.dealNo!=null and deal.dealNo!=''">
+            and (d.dealNo=#{deal.dealNo})
+        </if>
+        <if test="deal.startTime !=null">
+            and (d.dealTime &gt;= #{deal.startTime})
+        </if>
+        <if test="deal.endTime !=null">
+            and (d.dealTime &lt;= #{deal.endTime})
+        </if>
+        <if test="deal.expensesType!=null">
+            and (d.expensesType=#{deal.expensesType})
+        </if>
+        <if test="deal.orderNo!=null and deal.orderNo!=''">
+            and (o.orderNo=#{deal.orderNo})
+        </if>
+        <if test="deal.settlement!=null">
+            and (d.settlement=#{deal.settlement})
+        </if>
+    </sql>
+</mapper>
