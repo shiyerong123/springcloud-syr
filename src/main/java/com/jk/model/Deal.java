@@ -21,6 +21,13 @@ public class Deal {
     private Double serviceMoney;//服务费
     private Double estimateMoney;//预估费用
     private Integer settlement;//结算状态
+    private Double depositMoney;//提现余额
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",timezone = "GMT+8")
+    private Date applyTime;//申请时间
+    private Integer applyStatus;//审核状态
+    private Integer commpanyId;//关联公司id
+
 
     private String orderNo;//订单号
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
@@ -35,4 +42,10 @@ public class Deal {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date endTime;//结束交易时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date startApplyTime;//开始申请时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date endApplyTime;//结束申请时间
 }

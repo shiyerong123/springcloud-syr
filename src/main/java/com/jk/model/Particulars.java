@@ -53,5 +53,7 @@ public class Particulars {
     private String photograph;//图片
     private String explain;//发货说明
     private Integer freightId;//关联钱的id
+    private String  acceptname;
+    private Integer accept;
 }
 

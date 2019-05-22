@@ -23,67 +23,67 @@
 
 </head>
 <body>
-
+<div id="stay"   style="float: left">
+</div>
 <div class=" layui-row">
     <form class="layui-form">
-        <div class="layui-inline" style="width: 400px">
-            <label class="layui-form-label">支付状态</label>
-            <div class="layui-input-inline" style="width: 100px; margin-bottom: 0px; margin-top: 3px" >
-                <div style="float: left" class=" layui-row">
-                    <select name="draw" lay-filter="draw" id="draw" style="width:10px" >
-                        <option value="1">订单号</option>
-                        <option value="2">发货姓名</option>
-                        <option value="3">发货人手机号</option>
-                    </select>
-                </div>
-                <div style="float: left" class="layui-inline">
-                    <input class="layui-input" name="fleid" id="fleid" autocomplete="off">
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <select name="draw" lay-filter="draw" id="draw" style="width:10px" >
+                    <option value="1">订单号</option>
+                    <option value="2">发货姓名</option>
+                    <option value="3">发货人手机号</option>
+                </select>
             </div>
-
+            <div class="layui-inline">
+                <input class="layui-input" name="fleid" id="fleid" autocomplete="off">
+            </div>
         </div>
 
     </form>
 
-    <form class="layui-form">
-        <div class="layui-form-item" style="margin-bottom: 0px; margin-top: 3px">
-            <select name="aaa" lay-filter="aaa" id="aaa">
-                <option value="">请选择类型</option>
-                <option value="1">按发货地</option>
-                <option value="2">按收货地</option>
 
-            </select>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">出发地</label>
+            <div class="layui-input-inline">
+                <select name="aaa" lay-filter="aaa" id="aaa">
+                    <option value="">请选择类型</option>
+                    <option value="1">按发货地</option>
+                    <option value="2">按收货地</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="id" lay-filter="sheng" id="sheng">
+                    <option value="">请选择省</option>
+
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="id" lay-filter="shi" id="shi">
+                    <option value="">市</option>
+
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="id" lay-filter="xian" id="xian">
+                    <option value="" selected>区</option>
+                </select>
+            </div>
         </div>
     </form>
-    <div>
-        <div style="float: left;">省:</div>
-        <div class="select_style" style="float: left;">
-            <!--class="easyui-combobox"-->
-            <select name="id"  id="slid" onchange="shiid1()" style="width: 90px;"> </select>
-        </div>
-        <div style="float: left;">市：</div>
-        <div class="select_style" style="float: left">
-            <select name="id"  id="shiid" onchange="xianid1()" style="width: 90px;"></select>
-        </div>
-        <div style="float: left;">县: </div>
-        <div class="select_style" style="float: left;">
-            <select name="id"  id="xianid" style="width: 90px;"></select>
-        </div>
-        <div style="clear:both"></div>
-    </div>
 
     <form class="layui-form">
-
-
-        <div class="layui-form-item" style="margin-bottom: 0px; margin-top: 3px">
-            <input type="text" class="layui-input" id="startPlaceDate" placeholder="yyyy-MM-dd" style="width: 100px">到
+        <div class="layui-form-item">
+            <label class="layui-form-label">下单时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="startPlaceDate" placeholder="yyyy-MM-dd">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="endPlaceDate" placeholder="yyyy-MM-dd">
+            </div>
         </div>
-        <div class="layui-form-item" style="margin-bottom: 0px; margin-top: 3px">
-            <input type="text" class="layui-input" id="endPlaceDate" placeholder="yyyy-MM-dd" style="width: 100px">
-        </div>
-
-
-
     </form>
 
 
@@ -94,63 +94,58 @@
 
 
 <script>
-    function xianid1() {
-        var a=document.getElementById("shiid");
-        a=a.value
-        $.ajax({
-            url:"/getxian",
-            type: "post",
-            data:{typeid:a},
-            success : function (data) {
-                var hi="";
-
-                for (var i = 0; i <data.length; i++) {
-
-                    hi+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+    layui.use('form',function () {
+        var form = layui.form;
+        form.render();
+        $.post(
+            "getsheng",
+            function (obj) {
+                for (var i = 0; i < obj.length; i++) {
+                    $("#sheng").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
                 }
-                $("#xianid").html(hi);
+                form.render("select");
+            },
+            "json"
+        )
+        //追加发货地的市
+        form.on('select(sheng)', function (data) {
 
+            $("#shi").empty();//当省发生改变把以前市区的数据清空
+            $("#shi").append($("<option value='0'>请选择</option>"));//然后再追加一个请选择这样一个标签
+            $("#xian").empty();//一起把以前县的数据清空
+            $("#xian").append($("<option value='0'> 请选择</option>"));//然后再追加一个请选择这样一个标签
+            if (data.value != 0) {
+                $.post(
+                    "getshi",
+                    {typeid: data.value},
+                    function (obj) {
+                        for (var i = 0; i < obj.length; i++) {
+                            $("#shi").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
+                        }
+                        form.render("select");
+                    },
+                    "json"
+                )
             }
+        });
+
+        //追加发货地的县
+        form.on('select(shi)', function (data) {
+            $("#xian").empty();//当市区发生该变把以前县的数据清空
+            $("#xian").append($("<option value='0'> 请选择</option>"));
+            $.post(
+                "getxian",
+                {typeid: data.value},
+                function (obj) {
+                    for (var i = 0; i < obj.length; i++) {
+                        $("#xian").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
+                    }
+                    form.render("select");
+                },
+                "json"
+            )
         })
-
-    }
-
-    function shiid1() {
-        var a=document.getElementById("slid");
-
-        a=a.value
-        $.ajax({
-            url:"/getshi",
-            type: "post",
-            data:{typeid:a},
-            success : function (data) {
-                var hi="";
-                for (var i = 0; i <data.length; i++) {
-                    hi+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
-                }
-                $("#shiid").html(hi);
-                $("#xianid").html("");
-            }
-        })
-
-    }
-
-    $(function () {
-        $.ajax({
-            url:"/getsheng",
-            type: "post",
-            success : function (data) {
-                var hi="";
-                for (var i = 0; i <data.length; i++) {
-                    hi+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
-                }
-                $("#slid").html(hi);
-                $("#sslid").html(hi);
-
-
-            }
-        })
-    })
+    });
 </script>
 
 
@@ -181,6 +176,7 @@
     $(function () {
 
         init();
+        aaa();
    })
 
 function init() {
@@ -189,7 +185,8 @@ function init() {
         table.render({
             elem: '#test',
             dataType: 'json'
-            , url: '/findOrder'
+            , url: '/findOrder?zt=2'
+            ,toolbar: 'default'
             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , cols: [[
                 {field: 'id', width: 80, title: 'ID', sort: true}
@@ -203,8 +200,11 @@ function init() {
                 , {field: 'volume', width: 137, title: '总体积'}
                 ,{field:'county', width:137, title: '从'}
                 ,{field:'county1', width:137, title: '到'}
-
-                ,{field:'right', title: '操作', width:150,toolbar:"#barDemo"}
+                ,{field:'right', title: '操作', width:150
+                    ,templet: function(d){
+                        return ' <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="detail" href="javascript:log(&quot;'+d.orderNo+'&quot;)">查看详细信息</a>'
+                    }
+                }
             ]],
             id: 'testReload',
             skin: 'row', //表格风格
@@ -232,9 +232,9 @@ function init() {
                         startPlaceDate:$("#startPlaceDate").val(),
                         endPlaceDate:$("#endPlaceDate").val(),
                         aaa:$("#aaa").val(),
-                       slid:$("#slid").val(),
-                        shiid:$("#shiid").val(),
-                        xianid:$("#xianid").val()
+                       slid:$("#sheng").val(),
+                        shiid:$("#shi").val(),
+                        xianid:$("#xian").val()
                     }
                 });
             }
@@ -246,6 +246,174 @@ function init() {
         });
     });
 }
+
+    function log(id){
+        layer.open({
+            type: 1,
+            offset: 'auto',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '1000px'], //宽高
+            content:'<div id="dasd"></div>'
+        });
+        fu(id);
+    }
+    function  fu(id) {
+alert("12313");
+        $.ajax({
+            url:"/findById",
+            type:"post",
+            data:{"orderNo":id},
+            success:function (data) {
+                var str =fu2(data.orderNo);
+                var a ="";
+                if(data.accept==2){
+                    a="待确认收货"
+                }
+                if(data.accept==3){
+                    a="已确定收货"
+                }
+
+                var html="";
+                html ="<div>" +
+                    "<input type='checkbox'><span>订单号:"+data.orderNo+"</span>" +
+                    "<span>下单时间:"+data.placeDate+"</span>" +
+                    "<span>从:"+data.county+"</span>" +
+                    "<span>到:"+data.county1+"</span>" +
+                    "&nbsp;<input type='button' value="+a+" onclick='updateAll("+data.orderNo+")'>"+
+                    "</div>"+
+                    "<div>"+
+                    "<span>发货人信息</span>" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    " <span>收货人信息</span> " +
+                    " &nbsp;<br>" +
+                    "<hr><br>" +
+                    " <span>发货单位："+data.forwarding+"</span> " +
+                    "   &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "<span>收货单位："+data.consignee+"</span>" +
+                    " &nbsp;<br>" +
+                    "<span>联系人："+data.shipping+"</span>" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "<span>联系人："+data.delivery+"</span>" +
+                    "&nbsp;<br>" +
+                    "<span>电话："+data.sendPhone+"</span>" +
+                    " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "<span>电话："+data.deliverPhone+"</span>" +
+                    "&nbsp;<br>" +
+                    "<span>提货地址："+data.bringSite+"</span>" +
+                    " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                    "<span>送货地址："+data.presentSite+"</span>" +
+                    "&nbsp;<br>" +
+                    "</div>" +
+                    " <hr><br>" +
+                    "<span>货物信息</span>" +
+                    " <hr><br>"+
+                    "<div id='aaaa'>" +
+                    "</div>" +
+                    ""
+
+                $("#dasd").html(html);
+                $("#aaaa").html(str);
+
+            }
+
+        })
+    }
+
+
+
+
+    function fu2(id) {
+
+        var html='<table cellspacing="100px">' +
+            "<tr>" +
+            "<th>货物名称</th>" +
+            "<th>件数</th>" +
+            "<th>包装类型</th>" +
+            "<th>单件重量</th>" +
+            "<th>单件体积</th>" +
+            "</tr>" ;
+        $.ajax({
+            url:"/findgoods",
+            type:"post",
+            data:{goodsId:id},
+            async:false,
+            success:function (data) {
+
+                for (var i=0;i<data.length;i++){
+                    html+=
+
+                        "<tr>" +
+                        "<td><pre>      "+data[i].goodsName+"   </pre></td>" +
+                        "<td><pre>      "+data[i].number+"      </pre></td>" +
+                        "<td><pre>      "+data[i].packaging+"   </pre></td>" +
+                        "<td><pre>      "+data[i].singleton+"kg </pre></td>" +
+                        "<td> <pre>     "+data[i].volume+"m³    </pre></td>" +
+                        "</tr>" +
+                        "";
+                }html+="</table>" +
+                    "&nbsp;<br>" +
+                    "<span>总重量："+data[0].singletons+"</span>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "<span>总体积："+data[0].volumes+"m³</span>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "<span>总件数："+data[0].numbers+"</span>" +
+                    "&nbsp;<br>" +
+
+                    "";
+            },error:function(){
+
+            }
+        })
+        return html;
+    }
+
+    function updateAll(id){
+
+        $.ajax({
+            url:"/updateAll1",
+            type:"post",
+            data:{"id":id},
+            success:function (data) {
+                fu(id);
+                aaa();
+                init()
+            },error:function () {
+
+            }
+
+        })
+    }
+
+
+    function aaa() {
+
+        var html="";
+        $.ajax({
+            url:"/findstay1",
+            type:"post",
+            success:function (data) {
+
+                html="<span><font size='4' color='red'>已受理订单（"+data+"）</font></span>" ;
+                $("#stay").html(html);
+
+            }
+
+        })
+    }
 
 </script>
 

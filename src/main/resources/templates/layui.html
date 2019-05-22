@@ -9,6 +9,7 @@
     <script src="/js2/layui/layui.js"></script>
     <link rel="stylesheet" href="/js2/layui/css/layui.css">
 
+
 </head>
 
 <body class="layui-layout-body">
@@ -35,14 +36,14 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
+                    北京德邦物流
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="javaScript:zhuXiao()">退了</a></li>
         </ul>
     </div>
 
@@ -61,13 +62,34 @@
         </div>
 
     </div>
-
-    <div class="layui-tab"  style="height:600px; margin-left: 14%;"lay-allowClose="true" lay-filter="deom" >
+    <div class="layui-body">
+    <div class="layui-tab"  lay-allowClose="true" lay-filter="deom" >
         <ul class="layui-tab-title" id="deom">
-
+            <li class="layui-this">首页</li>
         </ul>
         <div class="layui-tab-content" style="height: 600px">
+            <div class="layui-tab-item">
+                <div style="float: left">
+                <img src="/js2/u28.png" height="150" width="400"/>
+                </div>
 
+                <div style="float: left;margin-left: 100px" id="gong">  </div>
+                <div id="newest"  style="clear: both;float: left;margin-top: 30px"></div>
+                <div id="newest2" style="float: left;width: 120px;margin-top: 30px"></div>
+                <div id="newest3" style="float: left;margin-top: 30px"></div>
+                <div id="newest4" style="clear: both;float: left;margin-left:60px"></div>
+                <div id="newest5" style="float: left;margin-left:30px"></div>
+                <div style="clear: both;margin-top: 30px">
+                    <table class="layui-hide" id="test" style="height: 600px"></table>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
         </div>
     </div>
 </div>
@@ -76,9 +98,12 @@
     <!-- 底部固定区域 -->
     © layui.com - 底部固定区域
 </div>
-</div>
+
 </body>
 <script type="text/javascript" th:inline="none">
+    function zhuXiao(){
+        location.href="/logout";
+    }
 
     var element =null;
     $(function () {
@@ -162,7 +187,464 @@
         };
     })
 
+$(function gong() {
+   var str =  newest();
+    var html="";
+    $.ajax({
+        url:"/findgong",
+        type:"post",
+        success:function(data){
 
+          html="<font size='6' color='red'>"+data.companyName+"</font>" +
+              "&nbsp;<br>" +
+              "&nbsp;<br>" +
+              "&nbsp;<br>" +
+              "<font size='4' color='red'>承运商等级:"+data.grade+"</font>" +
+              "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+              "<img src='/js2/xing.jpg' height='30' width='30'/><font  color='red'><a href='http://www.lvmae.com/news/lvmae/3981.html'> 您有新消息</a></font>" +
+              "&nbsp;<br>" +
+              "&nbsp;<br>" +
+              "&nbsp;<br>" +
+              "当前账户余额:43430.00" +
+              "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+              "<font size='4'>最新订单列表（"+str+"）</font>" +
+
+              ""
+            $("#gong").html(html);
+
+
+
+
+        },error:function () {
+            
+        }
+    })
+})
+
+   function newest(){
+    var  data1="";
+    $.ajax({
+        url:"/newest",
+        type:"post",
+        async:false,
+        success:function (data) {
+            data1 = data;
+
+          }
+    })
+
+         return data1;
+    }
+
+
+    $(function(){
+        var  html="";
+        html =
+        "    <form class='layui-form'>" +
+        "        <div class='layui-inline' style='width: 400px'>" +
+        "            <label class='layui-form-label'>支付状态</label>" +
+        "            <div class='layui-input-inline' style='width: 100px; margin-bottom: 0px; margin-top: 3px'>" +
+        "                <div style='float: left' class='layui-row'>" +
+        "                    <select name='draw' lay-filter='draw' id='draw' style='width:10px' >" +
+        "                        <option value='1'>订单号</option>" +
+        "                        <option value='2'>发货姓名</option>" +
+        "                        <option value='3'>发货人手机号</option>" +
+        "                    </select>" +
+        "                </div>" +
+        "                <div style='float: left' class='layui-inline'>" +
+        "                    <input class='layui-input' name='fleid' id='fleid' autocomplete='off'>" +
+        "                </div>" +
+        "            </div>" +
+        "" +
+        "        </div>" +
+        "    </form>"
+       $("#newest").html(html);
+    })
+
+
+    $(function(){
+
+        var html2=" <form class='layui-form'>" +
+            "        <div class='layui-form-item' style='margin-bottom: 0px; margin-top: 3px'>" +
+            "            <select name='aaa' lay-filter='aaa'id='aaa'>" +
+            "                <option value=''>请选择类型</option>" +
+            "                <option value='1'>按发货地</option>" +
+            "                <option value='2'>按收货地</option>" +
+            "            </select>" +
+            "        </div>" +
+            "    </form>" +
+            "" +
+            "" +
+            "";
+        $("#newest2").html(html2);
+    })
+$(function(){
+    var html="";
+    html="<form class='layui-form'>"+
+        "<div class='layui-form-item'>" +
+        "        <label class='layui-form-label'>出发地</label>" +
+        "        <div class='layui-input-inline'  style='width: 80px'>" +
+        "            <select name='id'lay-filter='sheng' id='sheng'>" +
+        "                <option value=''>请选择省</option>" +
+        "            </select>" +
+        "        </div>" +
+        "        <div class='layui-input-inline'style='width: 80px'>" +
+        "            <select name='id' lay-filter='shi' id='shi'>" +
+        "                <option value=''>市</option>" +
+        "            </select>" +
+        "        </div>" +
+        "        <div class='layui-input-inline' style='width: 80px'>" +
+        "            <select name='id' lay-filter='xian' id='xian'>" +
+        "                <option value='' selected>区</option>" +
+        "            </select>" +
+        "        </div>" +
+
+        "    </div>" +
+        "</form>";
+    $("#newest3").html(html);
+})
+
+    $(function(){
+        var html="";
+        html="<form class='layui-form'>" +
+            "            <div class='layui-inline'style='margin-top: 30px'>" +
+            "            <label class='layui-form-label'>是否上门:</label>" +
+            "            <div class='layui-input-inline' style='margin-bottom: 0px' >" +
+            "            <select name='wetherOrderId' lay-filter='wetherOrderId' id='wetherOrderId' style='width:10px'>" +
+            "            <option value=''>全部订单</option>" +
+            "            <option value='1'>需要上门提货</option>" +
+            "            <option value='2'>无需上门提货</option>" +
+            "            </select>" +
+            "            </div>" +
+            "            </div>" +
+            "            </form>";
+        $("#newest4").html(html);
+    })
+
+    $(function(){
+        var html="";
+        html="<form class='layui-form'>" +
+            "        <div class='layui-form-item'>" +
+            "            <label class='layui-form-label'>下单时间</label>" +
+            "            <div class='layui-input-inline'>" +
+            "                <input type='text' class='layui-input' id='startPlaceDate' placeholder='yyyy-MM-dd'>" +
+            "            </div>" +
+            "            <div class='layui-input-inline'>" +
+            "                <input type='text' class='layui-input' id='endPlaceDate' placeholder='yyyy-MM-dd'>" +
+            "            </div>" +
+            "        </div>" +
+            "    </form>" +
+            "<button class='layui-btn'data-type='reload'id='anniu'>搜索</button>" +
+            "";
+        $("#newest5").html(html);
+    })
 </script>
+ <script type="text/javascript" th:inline="none" >
+
+     layui.use('form',function () {
+         var form = layui.form;
+         form.render();
+         $.post(
+             "getsheng",
+             function (obj) {
+                 for (var i = 0; i < obj.length; i++) {
+                     $("#sheng").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
+                 }
+                 form.render("select");
+             },
+             "json"
+         )
+         //追加发货地的市
+         form.on('select(sheng)', function (data) {
+
+             $("#shi").empty();//当省发生改变把以前市区的数据清空
+             $("#shi").append($("<option value='0'>请选择</option>"));//然后再追加一个请选择这样一个标签
+             $("#xian").empty();//一起把以前县的数据清空
+             $("#xian").append($("<option value='0'> 请选择</option>"));//然后再追加一个请选择这样一个标签
+             if (data.value != 0) {
+                 $.post(
+                     "getshi",
+                     {typeid: data.value},
+                     function (obj) {
+                         for (var i = 0; i < obj.length; i++) {
+                             $("#shi").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
+                         }
+                         form.render("select");
+                     },
+                     "json"
+                 )
+             }
+         });
+
+         //追加发货地的县
+         form.on('select(shi)', function (data) {
+             $("#xian").empty();//当市区发生该变把以前县的数据清空
+             $("#xian").append($("<option value='0'> 请选择</option>"));
+             $.post(
+                 "getxian",
+                 {typeid: data.value},
+                 function (obj) {
+                     for (var i = 0; i < obj.length; i++) {
+                         $("#xian").append("<option value=" + obj[i].id + ">" + obj[i].name + "</option>")
+                     }
+                     form.render("select");
+                 },
+                 "json"
+             )
+         })
+     });
+
+
+
+
+ layui.use('laydate', function(){
+     var laydate = layui.laydate;
+
+//常规用法
+     laydate.render({
+         elem: '#startPlaceDate'
+     });
+     laydate.render({
+         elem: '#endPlaceDate'
+     });
+ })
+
+
+ var form='';//定义全局变量
+ layui.use(['form','laydate'],function(){
+     form  = layui.form,
+         laydate = layui.layuidate;
+     form.render();//更新渲染表单
+ });
+
+ $(function(){
+     init();
+ })
+ function init() {
+     layui.use('table', function() {
+         var table = layui.table;
+         table.render({
+             elem: '#test',
+             dataType: 'json'
+             , url: '/findOrder?zt=0'
+             ,toolbar: 'default'
+             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+             , cols: [[
+                   {field: 'id', width: 80, title: 'ID', sort: true}
+                 , {field: 'orderNo', width: 80, title: '订单号'}
+                 , {field: 'placeDate', width: 150, title: '下单时间', sort: true}
+                 , {field: 'shipping', width: 80, title: '发货人'}
+                 , {field: 'sendPhone', width: 100, title: '电话'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                 , {field: 'name', width: 80, title: '支付状态'}
+                 , {field: 'estimateMoney', width: 80, title: '预估运费', sort: true}
+                 , {field: 'zhong', width: 80, title: '总重量'}
+                 , {field: 'volume', width: 137, title: '总体积'}
+                 ,{field:'county', width:137, title: '从'}
+                 ,{field:'county1', width:137, title: '到'}
+
+                 ,{field:'right', title: '操作', width:150
+                     ,templet: function(d){
+                         return ' <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="detail" href="javascript:log(&quot;'+d.orderNo+'&quot;)">查看详细信息</a>'
+                     }
+                 }
+             ]],
+             id: 'testReload',
+             skin: 'row', //表格风格
+             even: true, //隔行背景
+             page: true, //是否显示分页
+             limits: [2, 5, 10], //显示
+             limit: 2, //每页默认显示的数量
+             request: {
+                 page: 'pageNo', //页码的参数名称，默认：page
+                 limit: 'pageSize' //每页数据量的参数名，默认：limit
+             }
+
+         });
+
+         var $ = layui.$, active = {
+             reload: function () {
+                 //执行重载
+                 table.reload('testReload', {
+                     page: {
+                         curr: 1 //重新从第 1 页开始
+                     }
+                     , where: {
+                         draw:$("#draw").val(),
+                         fleid:$("#fleid").val(),
+                         wetherOrderId: $("#wetherOrderId").val(),
+                         startPlaceDate:$("#startPlaceDate").val(),
+                         endPlaceDate:$("#endPlaceDate").val(),
+                         aaa:$("#aaa").val(),
+                         slid:$("#sheng").val(),
+                         shiid:$("#shi").val(),
+                         xianid:$("#xian").val()
+
+                     }
+                 });
+             }
+
+         };
+         $('#anniu').on('click', function(){
+             var type = $(this).data('type');
+             active[type] ? active[type].call(this) : '';
+         });
+     });
+ }
+ function log(id){
+     layer.open({
+         type: 1,
+         offset: 'auto',
+         skin: 'layui-layer-rim', //加上边框
+         area: ['600px', '500px'], //宽高
+         content:'<div id="dasd"></div>'
+     });
+     fu(id);
+ }
+ function  fu(id) {
+
+     $.ajax({
+         url:"/findById",
+         type:"post",
+         data:{"orderNo":id},
+         success:function (data) {
+             var str =    fu2(data.orderNo);
+             var  a = data.acceptname;
+
+             var html="";
+             html ="<div>" +
+                 "<input type='checkbox'><span>订单号:"+data.orderNo+"</span>" +
+                 "<span>下单时间:"+data.placeDate+"</span>" +
+                 "<span>从:"+data.county+"</span>" +
+                 "<span>到:"+data.county1+"</span>" +
+                 "&nbsp;<input type='button' value="+a+" onclick='updateAll("+data.orderNo+")'>"+
+                 "</div>"+
+                 "<div>"+
+                 "<span>发货人信息</span>" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 " <span>收货人信息</span> " +
+                 " &nbsp;<br>" +
+                 "<hr><br>" +
+                 " <span>发货单位："+data.forwarding+"</span> " +
+                 "   &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "<span>收货单位："+data.consignee+"</span>" +
+                 " &nbsp;<br>" +
+                 "<span>联系人："+data.shipping+"</span>" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "<span>联系人："+data.delivery+"</span>" +
+                 "&nbsp;<br>" +
+                 "<span>电话："+data.sendPhone+"</span>" +
+                 " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "<span>电话："+data.deliverPhone+"</span>" +
+                 "&nbsp;<br>" +
+                 "<span>提货地址："+data.bringSite+"</span>" +
+                 " &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;" +
+                 "<span>送货地址："+data.presentSite+"</span>" +
+                 "&nbsp;<br>" +
+                 "</div>" +
+                 " <hr><br>" +
+                 "<span>货物信息</span>" +
+                 " <hr><br>"+
+                 "<div id='aaaa'>" +
+                 "</div>" +
+                 ""
+
+
+
+             $("#dasd").html(html);
+             $("#aaaa").html(str);
+
+         }
+
+     })
+ }
+
+
+
+
+
+ function fu2(id) {
+
+     var html='<table cellspacing="100px">' +
+         "<tr>" +
+         "<th>货物名称</th>" +
+         "<th>件数</th>" +
+         "<th>包装类型</th>" +
+         "<th>单件重量</th>" +
+         "<th>单件体积</th>" +
+         "</tr>" ;
+     $.ajax({
+         url:"/findgoods",
+         type:"post",
+         data:{orderNo:id},
+         async:false,
+         success:function (data) {
+
+             for (var i=0;i<data.length;i++){
+                 html+=
+
+                     "<tr>" +
+                     "<td><pre>      "+data[i].goodsName+"   </pre></td>" +
+                     "<td><pre>      "+data[i].number+"      </pre></td>" +
+                     "<td><pre>      "+data[i].packaging+"   </pre></td>" +
+                     "<td><pre>      "+data[i].singleton+"kg </pre></td>" +
+                     "<td> <pre>     "+data[i].volume+"m³    </pre></td>" +
+                     "</tr>" +
+                     "";
+             }html+="</table>" +
+                 "&nbsp;<br>" +
+                 "<span>总重量："+data[0].singletons+"</span>" +
+                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                 "<span>总体积："+data[0].volumes+"m³</span>" +
+                 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                 "<span>总件数："+data[0].numbers+"</span>" +
+                 "&nbsp;<br>" +
+                 "";
+         },error:function(){
+
+         }
+     })
+     return html;
+ }
+
+
+ function updateAll(id){
+
+     $.ajax({
+         url:"/updateAll",
+         type:"post",
+         data:{"id":id},
+         success:function (data) {
+             fu(id);
+             aaa();
+             bbb();
+             init();
+         },error:function () {
+
+         }
+
+     })
+ }
+
+
+
+
+ </script>
+
+
+
 
 </html>

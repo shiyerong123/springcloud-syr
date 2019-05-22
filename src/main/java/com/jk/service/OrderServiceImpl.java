@@ -21,11 +21,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public HashMap<String, Object> findOrder(Integer page, Integer limit, Order order) {
+    public HashMap<String, Object> findOrder(Integer page, Integer limit, Order order,Integer carrid) {
        HashMap<String, Object> hashMap = new HashMap<>();
-        Integer count = orderMapper.findOrderCount(order);
+        Integer count = orderMapper.findOrderCount(order,carrid);
         Integer start = (page-1)*limit;
-        List<Order> list = orderMapper.findOrder(start,limit,order);
+        List<Order> list = orderMapper.findOrder(start,limit,order,carrid);
         hashMap.put("count",count);
         hashMap.put("data",list);
         hashMap.put("code",0);
@@ -88,11 +88,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public HashMap<String, Object> findDeal(Integer page, Integer limit, Deal deal) {
+    public HashMap<String, Object> findDeal(Integer page, Integer limit, Deal deal,Integer carrid) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        Integer count = orderMapper.findDealCount(deal);
+        Integer count = orderMapper.findDealCount(deal,carrid);
         Integer start = (page-1)*limit;
-        List<Deal> list = orderMapper.findDeal(start,limit,deal);
+        List<Deal> list = orderMapper.findDeal(start,limit,deal,carrid);
         for (int i=0;i<list.size();i++){
             Double sumMoney1 = orderMapper.findsumMoney(list.get(i).getDealNo());
             list.get(i).setSumMoney(sumMoney1);
@@ -123,9 +123,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Good> findgoods(Integer goodsId) {
+    public List<Good> findgoods(String orderNo) {
 
-        List<Good> map = orderMapper.findgoods(goodsId);
+        List<Good> map = orderMapper.findgoods(orderNo);
         for (Integer i=0;i<map.size();i++){
             Integer  zhong = orderMapper.weight(map.get(i).getOrderNo());
             Integer  volume = orderMapper.volume(map.get(i).getOrderNo());
@@ -136,4 +136,66 @@ public class OrderServiceImpl implements OrderService {
         }
         return map;
     }
+    @Override
+    public void updateAll(String id) {
+        orderMapper.updateAll(id);
+    }
+
+    @Override
+    public Integer findstay() {
+        Integer  a =   orderMapper.findstay();
+        return a;
+    }
+
+    @Override
+    public String rental() {
+        String  a =   orderMapper.rental();
+        return a;
+    }
+
+    @Override
+    public void updateAll1(String id) {
+        orderMapper.updateAll1(id);
+    }
+
+    @Override
+    public Integer findstay1() {
+        Integer  a =   orderMapper.findstay1();
+        return a;
+    }
+
+    @Override
+    public void updateAll2(String id) {
+        orderMapper.updateAll2(id);
+    }
+    @Override
+    public Integer findstay2() {
+        Integer  a =   orderMapper.findstay2();
+        return a;
+    }
+
+    @Override
+    public Commpany findgong() {
+        Commpany  commpany = orderMapper.findgong();
+        return commpany;
+    }
+
+    @Override
+    public Integer newest() {
+
+        return orderMapper.newest();
+    }
+
+
+    @Override
+    public Commpany  findCommpany(Integer carrid) {
+        Commpany commpany  = orderMapper.findCommpany(carrid);
+        return commpany;
+    }
+
+    @Override
+    public void updateCommpany(Commpany commpany) {
+        orderMapper.updateCommpany(commpany);
+    }
+
 }

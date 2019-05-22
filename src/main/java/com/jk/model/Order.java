@@ -44,6 +44,9 @@ public class Order {
     private Integer volume;//总体积
     private Integer draw;
     private String  fleid;
+    private Integer commpanyId;
+    private Integer zt;//自定义字段
+
 
     //临时字段
     private Double estimateMoney;//预估费用

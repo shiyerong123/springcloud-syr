@@ -11,7 +11,6 @@
       left join t_wetherorder t
       on o.wetherOrderId=t.id
       left join t_deal d on o.id=d.orderId
-
       <include refid="searchSql"></include>
    </select>
    <select id="findOrder" resultType="com.jk.model.Order">
@@ -19,6 +18,7 @@
        left join t_status s on o.statusId = s.id
        left join t_wetherorder t on o.wetherOrderId=t.id
        left join t_deal d on o.id=d.orderId
+
        <include refid="searchSql"></include>
        GROUP BY o.id
        limit #{start},#{limit}
@@ -62,14 +62,28 @@
         <if test="order.aaa==2 and order.shiid!=null">
             and (o.city2=#{order.shiid})
         </if>
-
+        <if test="order.zt==1">
+            and o.accept =1
+        </if>
+        <if test="order.zt==2">
+            and o.accept =2
+        </if>
+        <if test="order.zt==3">
+            and o.accept =3
+        </if>
+        <if test="order.zt==0">
+            and o.placeDate >= now()-interval 3 day
+        </if>
+        and o.commpanyId=#{carrid}
     </sql>
 
     <select id="findById" resultType="com.jk.model.Particulars">
-       select * from t_order o left JOIN t_goods g ON o.orderNo = g.orderNo
+    select * from t_order o left JOIN t_goods g ON o.orderNo = g.orderNo
        left join t_status s on o.statusId = s.id
        left join t_deal d on o.id=d.orderId
-       left join t_wetherorder t on o.wetherOrderId=t.id WHERE o.orderNo=#{orderNo}
+       left join t_wetherorder t on o.wetherOrderId=t.id
+       left join t_accept a on o.accept= a.id
+       WHERE o.orderNo=#{orderNo}
  GROUP BY o.id
     </select>
 
@@ -103,5 +117,15 @@
         <if test="deal.settlement!=null">
             and (d.settlement=#{deal.settlement})
         </if>
+        <if test="deal.startApplyTime !=null">
+            and (d.applyTime &gt;= #{deal.startApplyTime})
+        </if>
+        <if test="deal.endApplyTime !=null">
+            and (d.applyTime &lt;= #{deal.endApplyTime})
+        </if>
+        <if test="deal.applyStatus!=null">
+            and (d.applyStatus=#{deal.applyStatus})
+        </if>
+      and d.commpanyId=#{carrid}
     </sql>
 </mapper>

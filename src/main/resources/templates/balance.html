@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js2/jquery.min.js"></script>
+    <script src="/js2/layui/layui.js"></script>
+    <link rel="stylesheet" href="/js2/layui/css/layui.css">
+</head>
+<body>
+<div class=" layui-row">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="startApplyTime" placeholder="yyyy-MM-dd">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="endApplyTime" placeholder="yyyy-MM-dd">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">收支类型</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="applyStatus" value="1" title="已审核">
+                <input type="radio" name="applyStatus" value="2" title="未审核">
+            </div>
+        </div>
+
+    </form>
+</div>
+<div>
+    <button class="layui-btn" data-type="reload" id="anniu">搜索</button>
+</div>
+<table id="dealTable"></table>
+<script th:inline="none">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //常规用法
+        laydate.render({
+            elem: '#startApplyTime'
+        });
+        laydate.render({
+            elem: '#endApplyTime'
+        });
+    })
+
+    var form='';//定义全局变量
+    layui.use(['form','laydate'],function(){
+        form  = layui.form,
+            laydate = layui.layuidate;
+        form.render();//更新渲染表单
+    });
+    $(function () {
+        layui.use('table', function() {
+            var table = layui.table;
+            table.render({
+                elem: '#dealTable',
+                dataType: 'json'
+                , url: '/findDeal'
+                ,toolbar: 'default'
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    {field: 'id', width: 80, title: 'ID', sort: true}
+                    , {field: 'applyTime', width: 80, title: '申请时间', sort: true}
+                    , {field: 'depositMoney', width: 150, title: '余额提现', sort: true}
+                    , {field: 'cardNo', width: 80, title: '提现银行卡'}
+                    , {field: 'applyStatus', width: 100, title: '结算状态',templet:function(d){
+                        if(d.applyStatus==1){
+                            return "已审核"
+                        }else if(d.applyStatus==2){
+                            return "未审核"
+                        }
+
+                        }} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+
+                ]],
+                id: 'testReload',
+                skin: 'row', //表格风格
+                even: true, //隔行背景
+                page: true, //是否显示分页
+                limits: [2, 5, 10], //显示
+                limit: 2, //每页默认显示的数量
+                request: {
+                    page: 'pageNo', //页码的参数名称，默认：page
+                    limit: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+
+            });
+            var $ = layui.$, active = {
+                reload: function () {
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        , where: {
+                            startApplyTime:$("#startApplyTime").val(),
+                            endApplyTime:$("#endApplyTime").val(),
+                            applyStatus:$("[name='applyStatus']:checked").val()
+                        }
+                    });
+                }
+
+            };
+            $('#anniu').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        })
+
+    })
+
+
+</script>
+</body>
+
+</html>

@@ -10,35 +10,29 @@
 <body>
 <div class=" layui-row">
     <form class="layui-form">
-        <div class="layui-inline" style="width: 400px">
-            <label class="layui-form-label">交易号</label>
-            <div class="layui-input-inline" style="width: 150px; margin-bottom: 0px; margin-top: 3px" >
-                <div style="float: left" class="layui-inline">
-                    <input class="layui-input" name="orderNo" id="orderNo" autocomplete="off">
-                </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">订单号</label>
+            <div class="layui-inline">
+                <input class="layui-input" name="orderNo" id="orderNo" autocomplete="off">
             </div>
-
         </div>
-        <div class="layui-inline" style="width: 400px">
+        <div class="layui-inline">
             <label class="layui-form-label">收支类型</label>
-            <div class="layui-input-inline" style="width: 150px; margin-bottom: 0px; margin-top: 3px" >
+            <div class="layui-input-inline">
                 <input type="radio" name="settlement" value="1" title="已结算">
                 <input type="radio" name="settlement" value="2" title="待结算">
             </div>
         </div>
-    </form>
-
-
-    <form class="layui-form">
-        <label class="layui-form-label">交易时间</label>
-        <div class="layui-form-item" style="margin-bottom: 0px; margin-top: 3px">
-            <input type="text" class="layui-input" id="startTime" placeholder="yyyy-MM-dd" style="width: 100px">到
-        </div>
-        <div class="layui-form-item" style="margin-bottom: 0px; margin-top: 3px">
-            <input type="text" class="layui-input" id="endTime" placeholder="yyyy-MM-dd" style="width: 100px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">交易时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="startTime" placeholder="yyyy-MM-dd">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="endTime" placeholder="yyyy-MM-dd">
+            </div>
         </div>
     </form>
-
 
     <button class="layui-btn" data-type="reload" id="anniu">搜索</button>
 </div>
@@ -69,6 +63,7 @@
                 elem: '#dealTable',
                 dataType: 'json'
                 , url: '/findDeal'
+                ,toolbar: 'default'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     {field: 'id', width: 80, title: 'ID', sort: true}
